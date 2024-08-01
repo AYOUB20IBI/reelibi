@@ -4,7 +4,6 @@ const dotenv = require('dotenv');
 const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const nodemailer = require('nodemailer');
 const cors = require('cors');
 const corsConfig = {
     origin: "*", 
