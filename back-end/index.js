@@ -14,16 +14,24 @@ const CommentModel = require('./model/CommentModel');
 const LikePostModel = require('./model/LikePostModel');
 const dotenv = require('dotenv');
 const app = express();
-const port =process.env.PORT || 8000;
+const corsConfig = {
+    origin: "*",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"]
+};
+const port = process.env.PORT || 8000;
+app.use(cors(corsConfig));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+
 dotenv.config()
 // const uri = "mongodb://localhost:27017/app-instagram";
 const uri = "mongodb+srv://reelibi:reelibi@admin.eklr9ge.mongodb.net/?retryWrites=true&w=majority&appName=admin"
 const JWT_SECRET = 'AYOUBIBIDARNE345';
 const FRONT_END = process.env.FRONT_END;
 
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -300,7 +308,7 @@ app.post("/api/new/post", uploadVideo.single('video'), async (req, res) => {
                 video: video.filename
             });
             await newPost.save();
-            const posts = await PostModel.find({}).sort({date:-1});
+            const posts = await PostModel.find({}).sort({ date: -1 });
             const users = await UserModel.find({})
             res.status(200).json({ message: 'Post created successfully', post: newPost, posts: posts, users: users });
         }
@@ -312,7 +320,7 @@ app.post("/api/new/post", uploadVideo.single('video'), async (req, res) => {
 
 app.get('/api/get/posts', async (req, res) => {
     try {
-        const posts = await PostModel.find({}).sort({date:-1});
+        const posts = await PostModel.find({}).sort({ date: -1 });
         if (posts) {
             res.status(200).json({ posts: posts });
         }
