@@ -1,9 +1,12 @@
 
 const express = require('express');
+const dotenv = require('dotenv');
+const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
+app.use(cors())
 const bcrypt = require('bcrypt');
 const UserModel = require('./model/UsersModel'); // Ensure the model file path is correct
 const path = require('path');
@@ -12,15 +15,9 @@ const jwt = require('jsonwebtoken');
 const PostModel = require('./model/PostModel');
 const CommentModel = require('./model/CommentModel');
 const LikePostModel = require('./model/LikePostModel');
-const dotenv = require('dotenv');
-const app = express();
-const corsConfig = {
-    origin: "*",
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"]
-};
+
 const port = process.env.PORT || 8000;
-app.use(cors(corsConfig));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
