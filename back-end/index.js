@@ -6,7 +6,12 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
-app.use(cors())
+const corsConfig = {
+    origin: "*", 
+    credentials: true, 
+    methods: ["GET", "POST", "PUT", "DELETE"] 
+};
+app.use(cors(corsConfig))
 const bcrypt = require('bcrypt');
 const UserModel = require('./model/UsersModel'); // Ensure the model file path is correct
 const path = require('path');
