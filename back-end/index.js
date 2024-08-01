@@ -65,7 +65,7 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 
 
 app.get('/', (req, res) => {
-    req.send('Hello world');
+    res.send('Hello world');
 });
 
 app.post('/api/signup', upload.single('avatar'), async (req, res) => {
