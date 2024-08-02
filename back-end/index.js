@@ -1,44 +1,36 @@
-
 const express = require('express');
 const dotenv = require('dotenv');
 const app = express();
-const http = require("http");
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const corsConfig = {
-    origin: "*",
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"]
-};
-app.use(cors(corsConfig))
-const bcrypt = require('bcrypt');
-const UserModel = require('./model/UsersModel'); // Ensure the model file path is correct
 const path = require('path');
-const multer = require('multer')
+const multer = require('multer');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const UserModel = require('./model/UsersModel');
 const PostModel = require('./model/PostModel');
 const CommentModel = require('./model/CommentModel');
 const LikePostModel = require('./model/LikePostModel');
 
-const port = process.env.PORT || 8000;
-dotenv.config()
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
+dotenv.config();
+
+const corsConfig = {
+    origin: "*", 
+    credentials: true, 
+    methods: ["GET", "POST", "PUT", "DELETE"]
+};
+
+app.use(cors(corsConfig));
 app.use(express.json());
-const server = http.createServer(app);
 
-
-// const uri = "mongodb://localhost:27017/app-instagram";
-const uri = "mongodb+srv://reelibi:reelibi@admin.eklr9ge.mongodb.net/?retryWrites=true&w=majority&appName=admin"
-const JWT_SECRET = 'AYOUBIBIDARNE345';
+const port = process.env.PORT || 8000;
+const uri = "mongodb://localhost:27017/app-instagram";
+const JWT_SECRET = process.env.JWT_SECRET || 'AYOUBIBIDARNE345';
 
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('Database connected'))
     .catch(err => console.error('Database connection error:', err));
-
-
-
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -49,7 +41,6 @@ const storage = multer.diskStorage({
     }
 });
 
-// Storage configuration for video uploads
 const storageVideo = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'posts/');
@@ -62,10 +53,8 @@ const storageVideo = multer.diskStorage({
 const upload = multer({ storage: storage });
 const uploadVideo = multer({ storage: storageVideo });
 
-
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/posts', express.static(path.join(__dirname, 'posts')));
-
 
 app.get('/', (req, res) => {
     res.send('Hello world');
@@ -76,7 +65,6 @@ app.post('/api/signup', upload.single('avatar'), async (req, res) => {
     const avatar = req.file;
 
     const errors = {};
-
     if (!username) errors.username = 'Username is required.';
     if (!email) errors.email = 'Email is required.';
     if (!password) errors.password = 'Password is required.';
@@ -110,7 +98,7 @@ app.post('/api/signup', upload.single('avatar'), async (req, res) => {
         });
         await newUser.save();
 
-        res.status(200).json({ message: 'User registered successfully', user: newUser });
+        res.status(202).json({ message: 'User registered successfully', user: newUser });
     } catch (error) {
         console.error('Error during user registration:', error);
         res.status(500).json({ message: 'Server error' });
@@ -142,7 +130,7 @@ app.put('/api/edit/profile/:id', upload.single('avatar'), async (req, res) => {
         if (email !== user.email) {
             const existingUser = await UserModel.findOne({ email: email });
             if (existingUser) {
-                return res.status(409).json({ message: 'Email is already in use by another user' });
+                return res.status(404).json({ message: 'Email is already in use by another user' });
             }
         }
 
@@ -152,11 +140,9 @@ app.put('/api/edit/profile/:id', upload.single('avatar'), async (req, res) => {
         user.bio = bio || user.bio;
         user.gender = gender || user.gender;
         user.image = avatar ? avatar.filename : user.image;
-        user.followers = user.followers
-        user.following = user.following
 
         await user.save();
-        const users = await UserModel.find()
+        const users = await UserModel.find();
 
         res.status(200).json({ message: 'Profile updated successfully', user: user, users: users });
     } catch (error) {
@@ -165,73 +151,67 @@ app.put('/api/edit/profile/:id', upload.single('avatar'), async (req, res) => {
     }
 });
 
-
 app.put('/api/change/password/:userid', async (req, res) => {
     try {
-        const { new_password, confirm_password } = req.body
+        const { new_password, confirm_password } = req.body;
         const userId = req.params.userid;
+
         const errors = {};
         if (!new_password) errors.new_password = 'New Password is required.';
         if (!confirm_password) errors.confirm_password = 'Confirm Password is required.';
+        if (new_password !== confirm_password) errors.password_mismatch = 'Passwords do not match.';
+        
         if (Object.keys(errors).length > 0) {
             return res.status(422).json({ errors });
         }
-        if (userId) {
-            const user = await UserModel.findById(userId);
-            if (!user) {
-                return res.status(404).json({ message: 'User not found' });
-            }
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(new_password, salt);
 
-            user.password = hashedPassword || user.password;
-
-            await user.save();
-            const users = await UserModel.find()
-
-            res.status(200).json({ message: 'Password Changed successfully', user: user, users: users });
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
         }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ message: 'Internal Server Error' });
-    }
-})
 
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(new_password, salt);
+
+        user.password = hashedPassword;
+        await user.save();
+
+        const users = await UserModel.find();
+        res.status(200).json({ message: 'Password changed successfully', user: user, users: users });
+    } catch (error) {
+        console.error('Error changing password:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
 
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
-    let errors = {};
+    const errors = {};
 
-    if (!email) errors.email = "Email is required.";
-    if (!req.body.password) errors.password = "Password is required.";
+    if (!email) errors.email = 'Email is required.';
+    if (!password) errors.password = 'Password is required.';
 
     if (Object.keys(errors).length > 0) {
         return res.status(422).json({ errors });
     }
 
-    if (email && password) {
-        try {
-            const user = await UserModel.findOne({ email: email });
-            if (user) {
-                const correctPassword = await bcrypt.compare(password, user.password)
-                if (correctPassword) {
-                    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '24h' });
-                    res.status(200).json({
-                        message: 'Login successful',
-                        user: user,
-                        token: token
-                    });
-                } else {
-                    res.status(404).json({ message: 'Invalid password' });
-                }
-            } else {
-                res.status(404).json({ message: 'User not found' });
-            }
-        } catch (err) {
-            res.status(500).json({ error: err.message });
+    try {
+        const user = await UserModel.findOne({ email: email });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
         }
-    }
 
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(404).json({ message: 'Invalid password' });
+        }
+
+        const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '24h' });
+        res.status(200).json({ message: 'Login successful', user: user, token: token });
+    } catch (error) {
+        console.error('Error during login:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
 });
 
 const authenticateToken = (req, res, next) => {
@@ -248,16 +228,16 @@ const authenticateToken = (req, res, next) => {
 app.get('/api/user/profile', authenticateToken, async (req, res) => {
     try {
         const user = await UserModel.findById(req.user.userId);
-        if (user) {
-            res.status(200).json({ user: user });
-        } else {
-            res.status(404).json({ message: 'User not found' });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
         }
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+
+        res.status(200).json({ user: user });
+    } catch (error) {
+        console.error('Error fetching user profile:', error);
+        res.status(500).json({ message: 'Server error' });
     }
 });
-
 
 app.get('/api/users', async (req, res) => {
     try {
@@ -283,43 +263,42 @@ app.get('/api/user/:id', async (req, res) => {
 })
 
 
-// Posts
-
-
-
-app.post("/api/new/post", uploadVideo.single('video'), async (req, res) => {
-    const { title, description, user_id } = req.body;
+app.post('/api/create/post', uploadVideo.single('video'), async (req, res) => {
+    const { caption, location, user_id } = req.body;
     const video = req.file;
 
     const errors = {};
-
-    if (!title) errors.title = 'Title is required.';
-    if (!description) errors.description = 'Description is required.';
+    if (!caption) errors.caption = 'Caption is required.';
+    if (!location) errors.location = 'Location is required.';
     if (!user_id) errors.user_id = 'User ID is required.';
-    if (!video) errors.video = 'Video file is required.';
 
     if (Object.keys(errors).length > 0) {
         return res.status(422).json({ errors });
     }
 
     try {
-        if (title && description && user_id && video) {
-            const newPost = new PostModel({
-                title: title,
-                description: description,
-                user_id: user_id,
-                video: video.filename
-            });
-            await newPost.save();
-            const posts = await PostModel.find({}).sort({ date: -1 });
-            const users = await UserModel.find({})
-            res.status(200).json({ message: 'Post created successfully', post: newPost, posts: posts, users: users });
+        const user = await UserModel.findById(user_id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
         }
 
+        const newPost = new PostModel({
+            caption,
+            location,
+            video: video ? video.filename : null,
+            user_id,
+            comments: [],
+            likes: []
+        });
+
+        await newPost.save();
+        res.status(201).json({ message: 'Post created successfully', post: newPost });
     } catch (error) {
+        console.error('Error creating post:', error);
         res.status(500).json({ message: 'Server error' });
     }
 });
+
 
 app.get('/api/get/posts', async (req, res) => {
     try {
@@ -465,6 +444,6 @@ app.post("/api/unfollow/:id_unfollowUserId/:id_userId", async (req, res) => {
 
 
 
-server.listen(port, () => {
+app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
