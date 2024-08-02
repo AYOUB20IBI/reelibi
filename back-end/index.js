@@ -10,7 +10,6 @@ const corsConfig = {
     credentials: true, 
     methods: ["GET", "POST", "PUT", "DELETE"] 
 };
-app.options("",cors(corsConfig))
 app.use(cors(corsConfig))
 const bcrypt = require('bcrypt');
 const UserModel = require('./model/UsersModel'); // Ensure the model file path is correct
@@ -22,12 +21,12 @@ const CommentModel = require('./model/CommentModel');
 const LikePostModel = require('./model/LikePostModel');
 
 const port = process.env.PORT || 8000;
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-
 dotenv.config()
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+
+
 // const uri = "mongodb://localhost:27017/app-instagram";
 const uri = "mongodb+srv://reelibi:reelibi@admin.eklr9ge.mongodb.net/?retryWrites=true&w=majority&appName=admin"
 const JWT_SECRET = 'AYOUBIBIDARNE345';
