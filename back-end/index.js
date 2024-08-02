@@ -2,13 +2,14 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const app = express();
+const http = require("http");
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const corsConfig = {
-    origin: "*", 
-    credentials: true, 
-    methods: ["GET", "POST", "PUT", "DELETE"] 
+    origin: "*",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"]
 };
 app.use(cors(corsConfig))
 const bcrypt = require('bcrypt');
@@ -25,12 +26,17 @@ dotenv.config()
 // app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+const server = http.createServer(app);
 
 
 // const uri = "mongodb://localhost:27017/app-instagram";
 const uri = "mongodb+srv://reelibi:reelibi@admin.eklr9ge.mongodb.net/?retryWrites=true&w=majority&appName=admin"
 const JWT_SECRET = 'AYOUBIBIDARNE345';
-const FRONT_END = process.env.FRONT_END;
+
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('Database connected'))
+    .catch(err => console.error('Database connection error:', err));
+
 
 
 
@@ -59,10 +65,6 @@ const uploadVideo = multer({ storage: storageVideo });
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/posts', express.static(path.join(__dirname, 'posts')));
-
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('Database connected'))
-    .catch(err => console.error('Database connection error:', err));
 
 
 app.get('/', (req, res) => {
@@ -463,6 +465,6 @@ app.post("/api/unfollow/:id_unfollowUserId/:id_userId", async (req, res) => {
 
 
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
