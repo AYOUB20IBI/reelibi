@@ -1,0 +1,19 @@
+
+
+.signup .signup_form .title{
+    font-family: cursive;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.signup_form_two p a{
+    color: #004cff !important;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.sifnup_top_para{
+    text-align: center;
+    font-weight: 600;
+    color: #0000009c;
+}

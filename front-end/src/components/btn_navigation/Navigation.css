@@ -1,0 +1,207 @@
+/* Your existing CSS */
+
+* {
+    box-sizing: border-box;
+}
+
+.fab_wrapper {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 10000;
+    display: none;
+}
+
+.fab-checkbox {
+    display: none;
+}
+
+.fab {
+    position: absolute;
+    bottom: -1rem;
+    right: -1rem;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: #000;
+    transition: all 0.3s ease;
+    z-index: 1;
+    border-bottom-right-radius: 6px;
+    border: 2px solid #fff;
+    cursor: pointer;
+    z-index: -22;
+}
+
+.fab:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.fab-checkbox:checked~.fab:before {
+    width: 90%;
+    height: 90%;
+    left: 5%;
+    top: 5%;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.fab:hover {
+    background: orange;
+    box-shadow: 0px 1px 12px 1px #81a4f1;
+}
+
+.fab-dots-menu{
+    position: absolute;
+    top: 50%;
+    transform: translateX(0%) translateY(-50%) rotate(0deg);
+    transition: all 0.3s ease;
+    left: 30%;
+    font-size: 1.3rem;
+    color: #fff;
+}
+
+.fab-dots {
+    position: absolute;
+    height: 8px;
+    width: 8px;
+    background-color: white;
+    border-radius: 50%;
+    top: 50%;
+    transform: translateX(0%) translateY(-50%) rotate(0deg);
+    opacity: 1;
+    transition: all 0.3s ease;
+    display: none;
+}
+
+.fab-dots-1 {
+    left: 15px;
+    animation-delay: 0s;
+}
+
+.fab-dots-2 {
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    animation-delay: 0.4s;
+}
+
+.fab-dots-3 {
+    right: 15px;
+    animation-delay: 0.8s;
+}
+
+.fab-checkbox:checked~.fab .fab-dots {
+    height: 6px;
+}
+
+.fab .fab-dots-2 {
+    transform: translateX(-50%) translateY(-50%) rotate(0deg);
+}
+
+.fab-checkbox:checked~.fab .fab-dots-1 {
+    width: 32px;
+    border-radius: 10px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%) rotate(45deg);
+}
+
+.fab-checkbox:checked~.fab .fab-dots-3 {
+    width: 32px;
+    border-radius: 10px;
+    right: 50%;
+    transform: translateX(50%) translateY(-50%) rotate(-45deg);
+}
+
+
+
+.fab-checkbox:checked~.fab .fab-dots {
+    animation: none;
+    display: block;
+}
+
+.fab-checkbox:checked~.fab .fab-dots-menu {
+    display: none;
+}
+
+.fab-wheel {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    /* border: 1px solid #fff; */
+    width: 10rem;
+    height: 10rem;
+    transition: all 0.3s ease;
+    transform-origin: bottom right;
+    transform: scale(0);
+}
+
+.fab-checkbox:checked~.fab-wheel {
+    transform: scale(1);
+}
+
+.fab-action {
+    position: absolute;
+    background: #000000;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: White;
+    /* box-shadow: 0 0.1rem 1rem rgb(255 255 255); */
+    transition: all 0.7s ease;
+    opacity: 0;
+    border: 1px solid #fff;
+}
+
+.fab-checkbox:checked~.fab-wheel .fab-action {
+    opacity: 1;
+}
+
+.fab-action:hover {
+    background-color: orange;
+    color: #fff;
+}
+
+.fab-wheel .isActive{
+    background-color: orange;
+    color: #fff;
+}
+
+.fab-wheel .fab-action-1 {
+    right: -1rem;
+    top: 1rem;
+}
+
+.fab-wheel .fab-action-2 {
+    right: 4.4rem;
+    top: 0.5rem;
+}
+
+.fab-wheel .fab-action-3 {
+    right: 2.5rem;
+    bottom: 3rem;
+}
+
+.fab-wheel .fab-action-4 {
+    left: 0.2rem;
+    bottom: 2.8rem;
+}
+
+.fab-wheel .fab-action-5 {
+    left: 2.5rem;
+    bottom: -1rem;
+}
+
+
+@media (max-width: 500px) {
+    .fab_wrapper {
+        display: block;
+    }
+}

@@ -1,0 +1,19 @@
+.video_gallery{
+    width: 150px !important;
+    height: 230px;
+}
+.video_gallery video{
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+}
+
+.gallery{
+    display: flex;
+    align-items: center;
+    padding-bottom: 2rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}

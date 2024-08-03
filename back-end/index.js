@@ -21,13 +21,12 @@ const LikePostModel = require('./model/LikePostModel');
 
 const port = process.env.PORT || 8000;
 dotenv.config()
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(express.json());
 
 
-const uri = "mongodb://localhost:27017/app-instagram";
-// const uri = "mongodb+srv://reelibi:reelibi@admin.eklr9ge.mongodb.net/?retryWrites=true&w=majority&appName=admin"
+// const uri = "mongodb://localhost:27017/app-instagram";
+const uri = "mongodb+srv://admin:admin@ayoub.kz4ucnr.mongodb.net/?retryWrites=true&w=majority&appName=ayoub"
 const JWT_SECRET = 'AYOUBIBIDARNE345';
 
 

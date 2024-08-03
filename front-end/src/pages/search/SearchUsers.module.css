@@ -1,0 +1,20 @@
+.image_user{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border: 1px solid;
+    background: #fff;
+}
+
+.searchUser{
+    display: flex;
+    align-items: center;
+}
+
+.list_users li{
+    list-style: none;
+    background: #0000000a;
+    padding: 0.5rem;
+    border-radius: 20px;
+    margin-bottom: 0.5rem;
+}

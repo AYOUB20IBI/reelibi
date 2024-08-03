@@ -1,0 +1,12 @@
+
+.login .login_form .title{
+    font-family: cursive;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login_form_two p a,.login_form #forgot_password{
+    color: #004cff !important;
+    font-weight: 600;
+    text-decoration: none;
+}

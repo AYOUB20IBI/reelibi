@@ -1,0 +1,158 @@
+.home {
+    color: #fff;
+    display: grid;
+    place-items: center;
+}
+
+.app_vedio {
+    position: relative;
+    height: 600px;
+    background: #000;
+    overflow: scroll;
+    width: 100%;
+    max-width: 350px;
+    border-radius: 10px;
+    margin-top: 20px;
+    scroll-snap-type: y mandatory;
+    box-shadow: 2px 2px 32px -7px #00000094;
+}
+
+.app_vedio::-webkit-scrollbar {
+    display: none;
+}
+
+.vedio {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    scroll-snap-align: start;
+}
+
+.vedio_player {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    filter: brightness(0.6);
+}
+
+.footer {
+    position: relative;
+    /* bottom: 320px;
+    margin-left: 20px; */
+    bottom: 370px;
+    margin-left: 10px;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(350deg);
+    }
+}
+
+.img_marq {
+    display: flex;
+    align-items: center;
+}
+
+.img_marq img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background-color: #fff;
+}
+
+.img_marq h3 {
+    font-size: 12px;
+    left: 7px;
+    position: relative;
+}
+
+.image_play {
+    width: 55px;
+    position: absolute;
+    right: 25px;
+    animation: rotate infinite 5s linear;
+
+}
+
+.song {
+    display: flex;
+    align-items: center;
+}
+
+html {
+    scroll-snap-type: y mandatory;
+}
+
+.song .song_first {
+    background: #00000030;
+    backdrop-filter: blur(10px);
+    width: 100%;
+    border-bottom-left-radius: 15px;
+    border-top-left-radius: 15px;
+    text-transform: capitalize;
+}
+
+.like {
+    font-size: 25px;
+}
+
+.like .count_like {
+    font-size: 17px;
+    color: #ffffffdb;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+@media (max-width: 500px) {
+    .app_vedio {
+        height: 100vh;
+        padding: 0;
+        margin: 0;
+        max-width: 100%;
+    }
+}
+
+
+
+.reels_music {
+    margin-top: 5px;
+    font-size: 13.5px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+    text-transform: lowercase;
+}
+
+.reels_music span {
+    font-weight: 600;
+}
+
+
+.reels_desc {
+    height: 45%;
+    overflow-y: scroll;
+}
+
+.reels_desc::-webkit-scrollbar {
+    width: 15px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #d6dee1;
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
+}
+
+
