@@ -35,7 +35,7 @@ const storage = multer.diskStorage({
         cb(null, 'uploads/');
     },
     filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-images`);
+        cb(null, `${Date.now()}-${file.originalname}`);
     }
 });
 
@@ -45,7 +45,7 @@ const storageVideo = multer.diskStorage({
         cb(null, 'posts/');
     },
     filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-reels`);
+        cb(null, `${Date.now()}-${file.originalname}`);
     }
 });
 
