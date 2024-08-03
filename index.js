@@ -3,17 +3,15 @@ const express = require('express');
 const dotenv = require('dotenv');
 const app = express();
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const corsConfig = {
     origin: "*", 
     credentials: true, 
     methods: ["GET", "POST", "PUT", "DELETE"] 
 };
-app.options("",cors(corsConfig))
 app.use(cors(corsConfig))
 const bcrypt = require('bcrypt');
-const UserModel = require('./model/UsersModel'); // Ensure the model file path is correct
+const UserModel = require('./model/UsersModel'); 
 const path = require('path');
 const multer = require('multer')
 const jwt = require('jsonwebtoken');
@@ -22,17 +20,14 @@ const CommentModel = require('./model/CommentModel');
 const LikePostModel = require('./model/LikePostModel');
 
 const port = process.env.PORT || 8000;
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-
 dotenv.config()
-// const uri = "mongodb://localhost:27017/app-instagram";
-const uri = "mongodb+srv://reelibi:reelibi@admin.eklr9ge.mongodb.net/?retryWrites=true&w=majority&appName=admin"
-const JWT_SECRET = 'AYOUBIBIDARNE345';
-const FRONT_END = process.env.FRONT_END;
 
+app.use(express.json());
+
+
+// const uri = "mongodb://localhost:27017/app-instagram";
+const uri = "mongodb+srv://admin:admin@ayoub.kz4ucnr.mongodb.net/?retryWrites=true&w=majority&appName=ayoub"
+const JWT_SECRET = 'AYOUBIBIDARNE345';
 
 
 const storage = multer.diskStorage({
@@ -141,7 +136,7 @@ app.put('/api/edit/profile/:id', upload.single('avatar'), async (req, res) => {
         if (email !== user.email) {
             const existingUser = await UserModel.findOne({ email: email });
             if (existingUser) {
-                return res.status(409).json({ message: 'Email is already in use by another user' });
+                return res.status(404).json({ message: 'Email is already in use by another user' });
             }
         }
 
