@@ -150,7 +150,7 @@ export default function CreatePost({ is_check }) {
                   name="description"
                   id="description"
                   className="form-control shadow-none"
-                  defaultValue="😎AYOUB🤠 ✍️My life is my message✍️ 🤓Everything gets better with time.⌚ 🤖 #CodeCreator #TechEnthusiast #AyoubTheDeveloper #InnovationJunkie 🚀✨"
+                  defaultValue="😎Description🤠🚀✨"
                 />
               </div>
             </div>
