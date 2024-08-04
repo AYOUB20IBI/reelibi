@@ -56,9 +56,9 @@ export default function CreatePost({ is_check }) {
           return false;
         }
 
-        if (videoFile.size > 10 * 1024 * 1024) {
-          // 10MB size limit
-          Swal.showValidationMessage("Video file size must be less than 10MB");
+        if (videoFile.size > 15 * 1024 * 1024) {
+          // 15MB size limit
+          Swal.showValidationMessage("Video file size must be less than 15MB");
           return false;
         }
 
