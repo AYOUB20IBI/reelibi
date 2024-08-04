@@ -6,6 +6,7 @@ import { SignUpApi } from '../redux-store/Api';
 import { toast } from 'react-toastify';
 import logo from '../assets/images/logo/logo.png'
 export default function Signup() {
+  const [isSignup,setIsSignUp]=useState(false)
   const [showPass, setShowPass] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -31,7 +32,7 @@ export default function Signup() {
 
   const SignUpSubmit = async (e) => {
     e.preventDefault();
-
+    setIsSignUp(true)
     const inputData = new FormData();
     inputData.append('email', formData.email);
     inputData.append('password', formData.password);
@@ -48,6 +49,7 @@ export default function Signup() {
         dispatch({ type: 'LOGIN', payload: res.data.user });
         setErrors({ ErrorAll: res.data.message ? res.data.message : '' });
         toast.success("God Job")
+        setIsSignUp(false)
         navigate('/login');
       }
     } catch (err) {
@@ -64,6 +66,9 @@ export default function Signup() {
           ErrorAll: err.response.data.message || ''
         });
       }
+      setIsSignUp(false)
+    } finally{
+      setIsSignUp(false)
     }
   };
 
@@ -198,7 +203,22 @@ export default function Signup() {
                     </div>
                     <div className="col-12">
                       <div className="d-grid">
-                        <button className="btn btn-dark btn-lg" type="submit">SignUp</button>
+                        <button className="btn btn-dark btn-lg" type="submit">
+                          
+                          {isSignup ? (
+                              <>
+                              <span
+                                className="spinner-border spinner-border-sm"
+                                role="status"
+                                aria-hidden="true"
+                              ></span>
+                              </>
+                            ) : (
+                              <span>
+                                SignUp
+                              </span>
+                            )}
+                        </button>
                       </div>
                     </div>
                   </div>

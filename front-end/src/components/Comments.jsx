@@ -13,6 +13,8 @@ const url = import.meta.env.VITE_BACKEND_URL;
 import LoadingComments from "./loading/LoadingComments";
 
 export default function Comments({ id_post, id_user }) {
+  const [isComment, setIsComment] = useState(false);
+  const [isDComment, setIsDComment] = useState(false);
   const comments = useSelector((state) => state.comments);
   const isLoadingComments = useSelector((state) => state.isLoadingComments);
   const users = useSelector((state) => state.data);
@@ -29,8 +31,10 @@ export default function Comments({ id_post, id_user }) {
     return formatDistanceToNow(new Date(timestamp), { addSuffix: true });
   }
   const handleCreateComment = async () => {
+    setIsComment(true);
     if (textComment.trim() === "") {
       toast.error("Comment cannot be empty");
+      setIsComment(false);
       return;
     }
 
@@ -43,12 +47,17 @@ export default function Comments({ id_post, id_user }) {
     try {
       await NewComment(data, dispatch);
       setTextComment("");
+      setIsComment(false);
     } catch (error) {
       toast.error("Failed to add comment");
+      setIsComment(false);
+    } finally {
+      setIsComment(false);
     }
   };
 
   const handleDeleteComment = async (commentId) => {
+    setIsDComment(true);
     const data = {
       comment_id: commentId,
       post_id: id_post,
@@ -56,8 +65,12 @@ export default function Comments({ id_post, id_user }) {
 
     try {
       await DeleteComment(data, dispatch);
+      setIsDComment(false);
     } catch (error) {
       toast.error("Failed to add comment");
+      setIsDComment(false);
+    } finally {
+      setIsDComment(false);
     }
   };
 
@@ -111,8 +124,19 @@ export default function Comments({ id_post, id_user }) {
                         <span
                           className="input-group-text bg-dark text-light"
                           onClick={handleCreateComment}
+                          style={{cursor:"pointer"}}
                         >
-                          <FontAwesomeIcon icon={faSquarePen} />
+                          {isComment ? (
+                            <>
+                              <span
+                                className="spinner-border spinner-border-sm"
+                                role="status"
+                                aria-hidden="true"
+                              ></span>
+                            </>
+                          ) : (
+                            <FontAwesomeIcon icon={faSquarePen} />
+                          )}
                         </span>
                       </div>
                     </div>
@@ -163,9 +187,19 @@ export default function Comments({ id_post, id_user }) {
                                         handleDeleteComment(item._id)
                                       }
                                     >
-                                      <span>
-                                        <FontAwesomeIcon icon={faTrashCan} />
-                                      </span>
+                                      {isDComment ? (
+                                        <>
+                                          <span
+                                            className="spinner-border spinner-border-sm"
+                                            role="status"
+                                            aria-hidden="true"
+                                          ></span>
+                                        </>
+                                      ) : (
+                                        <span style={{cursor:"pointer"}}>
+                                          <FontAwesomeIcon icon={faTrashCan} />
+                                        </span>
+                                      )}
                                     </span>
                                   )}
                                 </div>

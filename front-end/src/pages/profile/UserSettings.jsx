@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 const url = import.meta.env.VITE_BACKEND_URL
 export default function UserSettings() {
+  const [isSetting,setIsSetting]=useState(false)
   const token = sessionStorage.getItem("_token");
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -39,7 +40,7 @@ export default function UserSettings() {
 
   const SittingSubmit = async (e) => {
     e.preventDefault();
-
+    setIsSetting(true)
     const inputData = new FormData();
     inputData.append("email", formData.email);
     inputData.append("username", formData.username);
@@ -56,6 +57,7 @@ export default function UserSettings() {
         dispatch({ type: "USERS", payload: res.data.users });
         dispatch({ type: "LOGIN", payload: res.data.user });
         setErrors({ ErrorAll: res.data.message ? res.data.message : "" });
+        setIsSetting(false)
         toast.success("God Job");
       }
     } catch (err) {
@@ -72,6 +74,9 @@ export default function UserSettings() {
           ErrorAll: err.response.data.message || "",
         });
       }
+      setIsSetting(false)
+    } finally{
+      setIsSetting(false)
     }
   };
 
@@ -254,7 +259,20 @@ export default function UserSettings() {
                     <div className="col-12 mt-4">
                       <div className="d-grid">
                         <button className="btn btn-dark btn-lg" type="submit">
-                          Save
+                            {isSetting ? (
+                              <>
+                              <span
+                                className="spinner-border spinner-border-sm"
+                                role="status"
+                                aria-hidden="true"
+                              ></span>
+                              </>
+                            ) : (
+                              <span>
+                                Save
+                              </span>
+                            )}
+                          
                         </button>
                       </div>
                     </div>

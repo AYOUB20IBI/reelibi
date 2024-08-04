@@ -10,9 +10,8 @@ import {
 } from "../../redux-store/Api";
 import Comments from "../../components/Comments";
 import styleHome from "./Home.module.css";
-import img2 from "../../assets/images/img2.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsisVertical, faHeart, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsisVertical, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import LoadingVideo from "../../components/loading/LoadingVideo";
@@ -114,7 +113,6 @@ const Home = () => {
   }
 
 
-
   return (
     <section className={styleHome.home}>
       {isLoadingPosts || posts.length === 0 ? (
@@ -149,6 +147,7 @@ const Home = () => {
                       <label
                         htmlFor={`like_heart_${post._id}`}
                         className={isLiked ? "text-danger" : "text-light"}
+                        style={{cursor:"pointer"}}
                       >
                         <FontAwesomeIcon icon={faHeart} />
                         <p className={styleHome.count_like}>{post?.like}</p>
@@ -161,6 +160,7 @@ const Home = () => {
                       <label
                         className={"text-light"}
                         onClick={HandleError}
+                        style={{cursor:"pointer"}}
                       >
                         <FontAwesomeIcon icon={faEllipsisVertical} />
                       </label>
