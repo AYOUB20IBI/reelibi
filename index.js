@@ -26,8 +26,8 @@ dotenv.config()
 app.use(express.json());
 
 
-const uri = "mongodb://localhost:27017/app-instagram";
-// const uri = "mongodb+srv://admin:admin@ayoub.kz4ucnr.mongodb.net/?retryWrites=true&w=majority&appName=ayoub"
+// const uri = "mongodb://localhost:27017/app-instagram";
+const uri = "mongodb+srv://admin:admin@ayoub.kz4ucnr.mongodb.net/?retryWrites=true&w=majority&appName=ayoub"
 const JWT_SECRET = 'AYOUBIBIDARNE345';
 
 
