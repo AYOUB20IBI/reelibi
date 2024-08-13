@@ -5,19 +5,20 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const corsConfig = {
-    origin: "*", 
-    credentials: true, 
-    methods: ["GET", "POST", "PUT", "DELETE"] 
+    origin: "*",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"]
 };
 app.use(cors(corsConfig))
 const bcrypt = require('bcrypt');
-const UserModel = require('./model/UsersModel'); 
+const UserModel = require('./model/UsersModel');
 const path = require('path');
 const multer = require('multer')
 const jwt = require('jsonwebtoken');
 const PostModel = require('./model/PostModel');
 const CommentModel = require('./model/CommentModel');
 const LikePostModel = require('./model/LikePostModel');
+const cloudinary = require('cloudinary').v2;
 
 const port = process.env.PORT || 8000;
 dotenv.config()
@@ -25,8 +26,8 @@ dotenv.config()
 app.use(express.json());
 
 
-// const uri = "mongodb://localhost:27017/app-instagram";
-const uri = "mongodb+srv://admin:admin@ayoub.kz4ucnr.mongodb.net/?retryWrites=true&w=majority&appName=ayoub"
+const uri = "mongodb://localhost:27017/app-instagram";
+// const uri = "mongodb+srv://admin:admin@ayoub.kz4ucnr.mongodb.net/?retryWrites=true&w=majority&appName=ayoub"
 const JWT_SECRET = 'AYOUBIBIDARNE345';
 
 
@@ -279,7 +280,11 @@ app.get('/api/user/:id', async (req, res) => {
 
 // Posts
 
-
+cloudinary.config({
+    cloud_name: 'dipsgwgak',
+    api_key: '551374889824998',
+    api_secret: 'h_3_p1NIM1Ap67_YBPE5pu53-h8'
+});
 
 app.post("/api/new/post", uploadVideo.single('video'), async (req, res) => {
     const { title, description, user_id } = req.body;
@@ -298,22 +303,61 @@ app.post("/api/new/post", uploadVideo.single('video'), async (req, res) => {
 
     try {
         if (title && description && user_id && video) {
+            // Upload video to Cloudinary
+            const result = await cloudinary.uploader.upload(video.path, {
+                resource_type: 'video'
+            });
+
+            // Create a new post with the video URL
             const newPost = new PostModel({
                 title: title,
                 description: description,
                 user_id: user_id,
-                video: video.filename
+                video: result.secure_url // Store Cloudinary URL
             });
             await newPost.save();
             const posts = await PostModel.find({}).sort({ date: -1 });
-            const users = await UserModel.find({})
+            const users = await UserModel.find({});
             res.status(200).json({ message: 'Post created successfully', post: newPost, posts: posts, users: users });
         }
-
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
     }
 });
+
+// app.post("/api/new/post", uploadVideo.single('video'), async (req, res) => {
+//     const { title, description, user_id } = req.body;
+//     const video = req.file;
+
+//     const errors = {};
+
+//     if (!title) errors.title = 'Title is required.';
+//     if (!description) errors.description = 'Description is required.';
+//     if (!user_id) errors.user_id = 'User ID is required.';
+//     if (!video) errors.video = 'Video file is required.';
+
+//     if (Object.keys(errors).length > 0) {
+//         return res.status(422).json({ errors });
+//     }
+
+//     try {
+//         if (title && description && user_id && video) {
+//             const newPost = new PostModel({
+//                 title: title,
+//                 description: description,
+//                 user_id: user_id,
+//                 video: video.filename
+//             });
+//             await newPost.save();
+//             const posts = await PostModel.find({}).sort({ date: -1 });
+//             const users = await UserModel.find({})
+//             res.status(200).json({ message: 'Post created successfully', post: newPost, posts: posts, users: users });
+//         }
+
+//     } catch (error) {
+//         res.status(500).json({ message: 'Server error' });
+//     }
+// });
 
 app.get('/api/get/posts', async (req, res) => {
     try {
