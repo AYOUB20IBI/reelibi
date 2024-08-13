@@ -129,7 +129,7 @@ const Home = () => {
             return (
               <div className={styleHome.vedio} key={index}>
                 <video
-                  src={`${url}/posts/${post.video}`}
+                  src={`${post.video}`}
                   className={styleHome.vedio_player}
                   onClick={handleVideoClick}
                   loop={true}
