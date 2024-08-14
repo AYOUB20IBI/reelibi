@@ -30,6 +30,11 @@ app.use(express.json());
 const uri = "mongodb+srv://admin:admin@ayoub.kz4ucnr.mongodb.net/?retryWrites=true&w=majority&appName=ayoub"
 const JWT_SECRET = 'AYOUBIBIDARNE345';
 
+cloudinary.config({
+    cloud_name: 'dipsgwgak',
+    api_key: '551374889824998',
+    api_secret: 'h_3_p1NIM1Ap67_YBPE5pu53-h8'
+});
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -99,7 +104,7 @@ app.post('/api/signup', upload.single('avatar'), async (req, res) => {
             role: "user",
             gender,
             bio: "🥳🥳 Bio 🥳🥳",
-            image: avatar ? avatar.filename : "logoprofile.png",
+            image: avatar ? avatar.filename : "https://reelibi.onrender.com/uploads/logoprofile.png",
             followers: [],
             following: []
         });
@@ -146,9 +151,22 @@ app.put('/api/edit/profile/:id', upload.single('avatar'), async (req, res) => {
         user.email = email || user.email;
         user.bio = bio || user.bio;
         user.gender = gender || user.gender;
-        user.image = avatar ? avatar.filename : user.image;
+        // user.image = avatar ? avatar.filename : user.image;
         user.followers = user.followers
         user.following = user.following
+
+        if (req.file) {
+            try {
+                const result = await cloudinary.uploader.upload(req.file.path, {
+                    public_id: `avatars/${id}`,
+                    overwrite: true,
+                });
+                user.image = result.secure_url;
+            } catch (uploadError) {
+                console.error('Cloudinary upload error:', uploadError);
+                return res.status(500).json({ message: 'Failed to upload avatar' });
+            }
+        }
 
         await user.save();
         const users = await UserModel.find()
@@ -280,11 +298,7 @@ app.get('/api/user/:id', async (req, res) => {
 
 // Posts
 
-cloudinary.config({
-    cloud_name: 'dipsgwgak',
-    api_key: '551374889824998',
-    api_secret: 'h_3_p1NIM1Ap67_YBPE5pu53-h8'
-});
+
 
 app.post("/api/new/post", uploadVideo.single('video'), async (req, res) => {
     const { title, description, user_id } = req.body;

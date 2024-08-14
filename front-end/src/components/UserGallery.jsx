@@ -20,7 +20,7 @@ export default function UserGallery({ user_id }) {
         {reels.length > 0 ? (
           reels.map((post, index) => (
             <div className={styleGallery.video_gallery} key={index}>
-              <video src={`${url}/posts/${post.video}`} controls></video>
+              <video src={`${post.video}`} controls></video>
             </div>
           ))
         ) : (

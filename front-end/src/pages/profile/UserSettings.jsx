@@ -112,7 +112,7 @@ export default function UserSettings() {
                     >
                       <img
                         className="avatar-img rounded-circle border border-2 border-white"
-                        src={picture ? URL.createObjectURL(picture) :`${url}/uploads/${user?.image}`}
+                        src={picture ? URL.createObjectURL(picture) :`${user?.image}`}
                         style={{ width: "100%", height: "100%" }}
                         alt=""
                       />

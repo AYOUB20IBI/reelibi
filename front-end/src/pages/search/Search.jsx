@@ -82,7 +82,7 @@ export default function Search() {
                         <li>
                           <div className={styleSearchUsers.searchUser}>
                             <img
-                              src={`${url}/uploads/${item.image}`}
+                              src={`${item.image}`}
                               alt=""
                               className={`${styleSearchUsers.image_user} me-3`}
                             />

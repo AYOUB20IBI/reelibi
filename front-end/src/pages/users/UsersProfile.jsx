@@ -77,7 +77,7 @@ export default function UsersProfile() {
                       <div className="card-body">
                         <div className="text-center mb-3">
                           <img
-                            src={`${url}/uploads/${user?.image}`}
+                            src={`${user?.image}`}
                             className="img-fluid rounded-circle"
                             alt="Luna John"
                             style={{

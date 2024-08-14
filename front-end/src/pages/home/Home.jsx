@@ -172,7 +172,7 @@ const Home = () => {
                         className="text-light text-decoration-none d-flex align-items-center"
                         to={`/profile/${res?._id}/user`}
                       >
-                        <img src={`${url}/uploads/${res?.image}`} alt="img" />
+                        <img src={`${res?.image}`} alt="img" />
                         <h3
                           className="me-3 text-lowercase"
                           style={{ fontSize: "18px" }}
